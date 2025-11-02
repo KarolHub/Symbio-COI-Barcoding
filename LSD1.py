@@ -1,11 +1,9 @@
-##turn fasta to uppercase
-for file in *.fasta; do     SampleName=`basename $file .zotus.fasta`;     awk 'BEGIN{FS=" "}{if(!/>/){print toupper($0)}else{print $1}}' $SampleName.fasta > "$SampleName"_uppercase.fasta; done
-
+#! /usr/bin/env python3
 
 ##filter
-for file in *_uppercase.fastq.gz; do
-    SampleName=`basename $file _uppercase.fastq.gz`
-    vsearch --fastx_filter $SampleName_uppercase.fastq.gz --fastq_minlen 308 --fastq_maxlen 314 --fastqout $SampleName_filtered.fastq.gz
+for file in *.fastq.gz; do
+    SampleName=`basename $file .fastq.gz`
+    vsearch --fastx_filter $SampleName.fastq.gz --fastq_minlen 308 --fastq_maxlen 314 --fastqout $SampleName_filtered.fastq.gz
 done
 
 ##Fastq to fasta
