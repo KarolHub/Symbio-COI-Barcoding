@@ -1,13 +1,12 @@
 #! /usr/bin/env python3
 
 import sys, os, re
-if len(sys.argv) != 3:
+if len(sys.argv) != 2:
     sys.exit("""ERROR! CHECK YOUR INPUT PARAMETERS!
 Please provide:
-1) path to the directory with R1 and R2 fiels for all the amplicon libraries that you want to analyse e.g.:
-/home/Data/For/Nature/Publication/)
-2) type of data, please indicate if you are going to analyse 16SV4, 16SV1-V2 (Bacterial) or COI.""")
-Script, path_to_your_raw_data, type_of_data = sys.argv
+1) path to the directory with R1 and R2 files for all the amplicon libraries that you want to analyse e.g.:
+/home/Data/For/Nature/Publication/)""")
+Script, path_to_your_raw_data = sys.argv
 
 ###Creating a dictionary with sequences as keys and nested dictionary as values. Nested dictionary uses names of libraries as keys and number of reads as values:
 
@@ -104,16 +103,10 @@ os.system("sed -E 's/;size=[0-9].{0,}//g' zotus.fasta > new_zotus.fasta")
 
 print("Assigning taxonomy..................... ", end="")
 ###Assigning taxonomy:
+
 #Please pay attention to what cutoff value you want to use!
-if type_of_data == "COI":
-    os.system("""vsearch --sintax new_zotus.fasta --threads 1 -db /home/karol.nowak/ela_iwaszk/coi_db_sintax_8levels_221216.fasta -tabbedout zotus.tax -strand both -sintax_cutoff 0.8
-    vsearch --sintax otus.fasta --threads 1 -db /home/karol.nowak/ela_iwaszk/coi_db_sintax_8levels_221216.fasta -tabbedout otus.tax -strand both -sintax_cutoff 0.8""")
-elif type_of_data == "16SV4":
-    os.system("""vsearch --sintax new_zotus.fasta -db /mnt/matrix/symbio/db/SILVA_138/SILVA_endo_spikeins_RDP.fasta -tabbedout zotus.tax -strand both -sintax_cutoff 0.8
-vsearch --sintax otus.fasta -db /mnt/matrix/symbio/db/SILVA_138/SILVA_endo_spikeins_RDP.fasta -tabbedout otus.tax -strand both -sintax_cutoff 0.8""")
-elif type_of_data == "16SV1-V2":
-    os.system("""vsearch --sintax new_zotus.fasta -db /mnt/matrix/symbio/db/SILVA_138/SILVA_endo_spikeins_RDP.fasta -tabbedout zotus.tax -strand both -sintax_cutoff 0.8
-vsearch --sintax otus.fasta -db /mnt/matrix/symbio/db/SILVA_138/SILVA_endo_spikeins_RDP.fasta -tabbedout otus.tax -strand both -sintax_cutoff 0.8""")    
+os.system("""vsearch --sintax new_zotus.fasta --threads 1 -db /home/karol.nowak/ela_iwaszk/coi_db_sintax_8levels_221216.fasta -tabbedout zotus.tax -strand both -sintax_cutoff 0.8
+vsearch --sintax otus.fasta --threads 1 -db /home/karol.nowak/ela_iwaszk/coi_db_sintax_8levels_221216.fasta -tabbedout otus.tax -strand both -sintax_cutoff 0.8""")
     
 ###Removing redundant info from out taxonomy files:
 os.system("""sed -i 's/[dpcofgs]\://g' zotus.tax
